@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -64,5 +65,15 @@ public class GeneralService {
     public ResponseEntity<?> deleteGeneralEntry(){
         generalRepo.deleteAll();
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    public ResponseEntity<General> getGeneralEntry(int id) {
+       Optional<General> optionalans = generalRepo.findById(id);
+       if(optionalans.isPresent()){
+            General general = optionalans.get();
+            return new ResponseEntity<>(general, HttpStatus.OK);
+       }else{
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+       }
     }
 }

@@ -6,8 +6,11 @@ import java.util.Optional;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import com.anshul.Practiseone.Entity.General;
 import com.anshul.Practiseone.Entity.User;
@@ -81,6 +84,21 @@ public class UserService {
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
         }else{
             return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
+        }
+    }
+
+    public ResponseEntity<?> updateGeneralInUser(String username, int id){
+        User user = userRepo.findByUserName(username);
+        if(user != null){
+            ResponseEntity<General> responseEntity = generalService.getGeneralEntry(id);
+            if(responseEntity.getStatusCode() == HttpStatus.OK){
+                General general = responseEntity.getBody();
+                user.getGeneral().add(general);
+                userRepo.save(user);
+                return new ResponseEntity<>(user, HttpStatus.OK);
+            }else return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }else{
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 }

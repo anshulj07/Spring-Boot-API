@@ -59,4 +59,9 @@ public class UserController {
     public ResponseEntity<?> deleteGeneralFromUser(@PathVariable String username, @PathVariable int id){
         return userService.deleteGeneralFromUser(username, id);
     }
+
+    @PutMapping("/{username}/{id}")
+    public ResponseEntity<?> updateGeneralInUser(@PathVariable String username, @PathVariable int id){
+        return userService.updateGeneralInUser(username, id);
+    }
 }

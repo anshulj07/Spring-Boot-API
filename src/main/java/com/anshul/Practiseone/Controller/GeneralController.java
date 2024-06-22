@@ -33,6 +33,11 @@ public class GeneralController {
             return generalService.getAllGeneralEntry();
         }
 
+        @GetMapping("/{id}")
+        public ResponseEntity<General> getGeneralEntry(@PathVariable int id){
+            return generalService.getGeneralEntry(id);
+        }
+
         @PutMapping("/{id}")
         public ResponseEntity<?> updateGeneralEntry(@PathVariable int id, @RequestBody General general){
             return generalService.updateGeneralEntry(id, general);

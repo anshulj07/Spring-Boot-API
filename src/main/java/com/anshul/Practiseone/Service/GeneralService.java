@@ -3,11 +3,12 @@ package com.anshul.Practiseone.Service;
 import java.util.List;
 import java.util.Optional;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.anshul.Practiseone.Entity.General;
 import com.anshul.Practiseone.Entity.User;
@@ -34,11 +35,17 @@ public class GeneralService {
         else return ResponseEntity.ok(generals);
     }
 
+    @Transactional
     public void createGeneralEntryInsideUser(General general, String username){
-        User user  = userRepo.findByUserName(username);
-        General saved = generalRepo.save(general);
-        user.getGeneral().add(saved);
-        userRepo.save(user);
+        try{
+            User user  = userRepo.findByUserName(username);
+            General saved = generalRepo.save(general);
+            user.getGeneral().add(saved);
+            userRepo.save(user);
+        }catch (Exception e){
+            System.out.println(e);
+            throw new RuntimeException("Something has happend at createGeneralEntryInsideUser", e);
+        }
     }
 
     public ResponseEntity<?> updateGeneralEntry(int id, General general) {

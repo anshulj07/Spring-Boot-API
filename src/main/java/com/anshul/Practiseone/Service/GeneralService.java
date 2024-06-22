@@ -9,7 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.anshul.Practiseone.Entity.General;
+import com.anshul.Practiseone.Entity.User;
 import com.anshul.Practiseone.Repository.GeneralRepo;
+import com.anshul.Practiseone.Repository.UserRepo;
 
 
 @Service
@@ -17,6 +19,9 @@ public class GeneralService {
 
     @Autowired
     private GeneralRepo generalRepo;
+
+    @Autowired
+    private UserRepo userRepo;
 
     public ResponseEntity<General> createGeneralEntry(General general) {
         return ResponseEntity.ok(generalRepo.save(general));
@@ -26,6 +31,13 @@ public class GeneralService {
         List<General> generals = generalRepo.findAll();
         if(generals.isEmpty()) return ResponseEntity.notFound().build();
         else return ResponseEntity.ok(generals);
+    }
+
+    public void createGeneralEntryInsideUser(General general, String username){
+        User user  = userRepo.findByUserName(username);
+        General saved = generalRepo.save(general);
+        user.getGeneral().add(saved);
+        userRepo.save(user);
     }
 
     public ResponseEntity<?> updateGeneralEntry(int id, General general) {

@@ -5,6 +5,7 @@ import java.util.List;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,5 +53,10 @@ public class UserController {
     @PutMapping("/{username}") 
     public ResponseEntity<?> updateUser(@RequestBody User user, @PathVariable String username){
         return userService.updateUser(user, username);
+    }
+
+    @DeleteMapping("/{username}/{id}")
+    public ResponseEntity<?> deleteGeneralFromUser(@PathVariable String username, @PathVariable int id){
+        return userService.deleteGeneralFromUser(username, id);
     }
 }

@@ -72,4 +72,15 @@ public class UserService {
        }
        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
+    public ResponseEntity<?> deleteGeneralFromUser(String username, int id){
+        User user = userRepo.findByUserName(username);
+        if(user != null){
+            user.getGeneral().removeIf(x -> x.getId() == id);
+            userRepo.save(user);
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        }else{
+            return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
+        }
+    }
 }

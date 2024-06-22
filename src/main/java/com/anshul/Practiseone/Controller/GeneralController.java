@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.anshul.Practiseone.Entity.General;
 import com.anshul.Practiseone.Repository.GeneralRepo;
+import com.anshul.Practiseone.Service.GeneralService;
 
 @RestController
 @RequestMapping("/general")
@@ -24,44 +25,31 @@ public class GeneralController {
         @Autowired
         private GeneralRepo generalRepo;
 
+        @Autowired
+        private GeneralService generalService;
+
         @PostMapping
         public ResponseEntity<General> createGeneralEntry(@RequestBody General general){
-            return ResponseEntity.ok(generalRepo.save(general));
+            return generalService.createGeneralEntry(general);
         }
 
         @GetMapping
         public ResponseEntity<List<General>> getAllGeneralEntry(){
-            List<General> generals = generalRepo.findAll();
-            if(generals.isEmpty()) return ResponseEntity.notFound().build();
-            else return ResponseEntity.ok(generals);
+            return generalService.getAllGeneralEntry();
         }
 
         @PutMapping("/{id}")
         public ResponseEntity<?> updateGeneralEntry(@PathVariable int id, @RequestBody General general){
-            Optional<General> optionalans = generalRepo.findById(id);
-            if(optionalans.isPresent()){
-                General ans = optionalans.get();
-                ans.setTitle(general.getTitle() != null && !general.getContent().equals("") ? general.getTitle() : ans.getTitle());
-                ans.setContent(general.getContent() != null && !general.getContent().equals("")? general.getContent() : ans.getContent());
-                generalRepo.save(ans);
-                return ResponseEntity.ok(ans);
-            }
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return generalService.updateGeneralEntry(id, general);
         }
 
         @DeleteMapping("{id}")
         public ResponseEntity<?> deleteGeneralEntryById(@PathVariable int id){
-            Optional<General> optionalans = generalRepo.findById(id);
-            if(optionalans.isPresent()){
-                generalRepo.deleteById(id);
-                return new ResponseEntity<>(HttpStatus.OK);
-            }
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return generalService.deleteGeneralEntryById(id);
         }
 
         @DeleteMapping
-        public ResponseEntity<String> deleteGeneralEntry(){
-            generalRepo.deleteAll();
-            return new ResponseEntity<>(HttpStatus.OK);
+        public ResponseEntity<?> deleteGeneralEntry(){
+            return generalService.getAllGeneralEntry();
         }
 }
